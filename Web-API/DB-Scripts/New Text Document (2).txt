@@ -1,0 +1,77 @@
+CREATE TABLE Tasks (
+    TaskID INT IDENTITY(1,1) PRIMARY KEY,
+    Description TEXT,
+    Position INT,
+    CreatedAt DATETIME,
+    UpdatedAt DATETIME,
+    IsCompleted BIT,
+    CONSTRAINT UC_TaskID UNIQUE (TaskID) -- Add a unique constraint to TaskID
+);
+CREATE TABLE CompletedTasks (
+    CompletedTaskID INT IDENTITY(1,1) PRIMARY KEY,
+    TaskID INT,
+    CompletedAt DATETIME,
+    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
+);
+CREATE PROCEDURE GetTasks
+AS
+BEGIN
+    SELECT
+        TaskID,
+        Description,
+        Position,
+        CreatedAt,
+        UpdatedAt,
+        IsCompleted
+    FROM Tasks;
+END;
+CREATE PROCEDURE GetCompletedTasks
+AS
+BEGIN
+    SELECT
+        CompletedTaskID,
+        TaskID,
+        CompletedAt
+    FROM CompletedTasks;
+END;
+
+CREATE PROCEDURE InsertTask
+    @Description TEXT,
+    @IsCompleted BIT
+AS
+BEGIN
+    INSERT INTO Tasks (Description, CreatedAt, UpdatedAt, IsCompleted)
+    VALUES (@Description, GETDATE(), GETDATE(), @IsCompleted);
+END;
+
+CREATE PROCEDURE DeleteTask
+    @TaskID INT
+AS
+BEGIN
+    -- Delete the task with the specified TaskID
+    DELETE FROM Tasks
+    WHERE TaskID = @TaskID;
+
+    -- Optionally, you can perform additional actions or return a result here
+
+END;
+CREATE PROCEDURE UpdateTaskIsCompletedStatus
+    @TaskID INT,
+    @IsCompleted BIT
+AS
+BEGIN
+    UPDATE Tasks
+    SET IsCompleted = @IsCompleted,
+        UpdatedAt = GETDATE() -- Update the UpdatedAt timestamp
+    WHERE TaskID = @TaskID;
+END;
+CREATE PROCEDURE UpdateTaskDescription
+    @TaskID INT,
+    @Description TEXT
+AS
+BEGIN
+    UPDATE Tasks
+    SET Description = @Description,
+        UpdatedAt = GETDATE() -- Update the UpdatedAt timestamp
+    WHERE TaskID = @TaskID;
+END;

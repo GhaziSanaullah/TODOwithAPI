@@ -1,0 +1,25 @@
+CREATE PROCEDURE GetUserById
+    @userId INT
+AS
+BEGIN
+    SELECT UserId, Username, Password FROM [User] WHERE UserId = @userId
+END
+
+CREATE PROCEDURE AddUser
+    @username NVARCHAR(50),
+    @password NVARCHAR(50),
+    @userId INT OUT
+AS
+BEGIN
+    INSERT INTO [User] (Username, Password)
+    VALUES (@username, @password)
+
+    SET @userId = SCOPE_IDENTITY()
+END
+
+CREATE PROCEDURE GetAllUsers
+AS
+BEGIN
+    SELECT UserId, Username, Password FROM [User]
+END
+

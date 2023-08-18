@@ -1,0 +1,204 @@
+using System;
+// you can also use other imports, for example:
+using System.Collections.Generic;
+
+// you can write to stdout for debugging purposes, e.g.
+// Console.WriteLine("this is a debug message");
+
+class Solution 
+{
+    public int solution(string S) 
+    {
+        // Implement your solution here
+        int minDeletions = 0;
+        while (!IsPalindromePossible(S))
+        {
+            char charToDelete = FindCharToDelete(S);
+            S = S.Remove(S.IndexOf(charToDelete), 1);
+            minDeletions++;
+        }
+        return minDeletions;
+    }
+    private bool IsPalindromePossible(string str)
+    {
+        Dictionary<char, int> counting = new Dictionary<char, int>();
+        foreach (char ch in str)
+        {
+            if (counting.ContainsKey(ch))
+            {
+                counting[ch]++;
+            }
+            else
+            {
+                counting.Add(ch, 1);
+            }
+        }
+
+        int oddCount = 0;
+        char oddChar = '$';
+        foreach (KeyValuePair<char, int> itr in counting)
+        {
+            if (itr.Value % 2 != 0)
+            {
+                oddCount++;
+                oddChar = itr.Key;
+            }
+        }
+        return oddCount <= 1;
+    }
+
+    private char FindCharToDelete(string str)
+    {
+        Dictionary<char, int> counting = new Dictionary<char, int>();
+        foreach (char ch in str)
+        {
+            if (counting.ContainsKey(ch))
+            {
+                counting[ch]++;
+            }
+            else
+            {
+                counting.Add(ch, 1);
+            }
+        }
+        int oddCount = 0;
+        char oddChar = '$';
+        foreach (KeyValuePair<char, int> itr in counting)
+        {
+            if (itr.Value % 2 != 0)
+            {
+                oddCount++;
+                oddChar = itr.Key;
+            }
+        }
+        return oddChar;
+    }
+}
+A one-day-long training session will be conducted twice during the next 10
+days. There are N employees (numbered from 0 to N-1) willing to attend it.
+Each employee has provided a list of which of the next 10 days they are able
+to participate in the training. The employees' preferences are represented as
+an array of strings. E[K] is a string consisting of digits (0-'9') representing the
+days the K-th employee is able to attend the training.
+The dates during which the training will take place are yet to be scheduled.
+What is the maximum number of employees that can attend during at least
+one of the two scheduled days?
+Write a function:
+class Solution { public int solution(string[] E); }
+that, given an array E consisting of N strings denoting the available days for
+each employee, will return the maximum number of employees that can
+attend during at least one of the two scheduled days.
+Examples:
+1. Given E = ["039", "4", "14", "32", "', "34", "7"], the answer is 5. It can be
+achieved for example by running training on days 3 and 4. This way
+employees number 0, 1, 2, 3 and 5 will attend the training.
+2. Given E = ['801234567", "180234567", "0", "189234567", "891234567", "98",
+"9"], the answer is 7. It can be achieved by running training on days 0 and 9.
+This allows all employees to attend the training.
+using System;
+using System.Collections.Generic;
+
+class Solution
+{
+    public int Solution(int[] A)
+    {
+        // Create a dictionary to store digit keys and their corresponding list of numbers.
+        Dictionary<int, List<int>> digitKeyMap = new Dictionary<int, List<int>>();
+
+        // Iterate through the array of numbers to calculate their digit keys and update the dictionary.
+        foreach (int num in A)
+        {
+            int digitKey = CalculateDigitKey(num);
+
+            if (!digitKeyMap.ContainsKey(digitKey))
+            {
+                digitKeyMap[digitKey] = new List<int>();
+            }
+
+            digitKeyMap[digitKey].Add(num);
+        }
+
+        // Find the maximum sum of two numbers that share the same digit key.
+        int maxSum = -1;
+
+        foreach (var kvp in digitKeyMap)
+        {
+            List<int> numbersWithSameDigitKey = kvp.Value;
+
+            if (numbersWithSameDigitKey.Count >= 2)
+            {
+                numbersWithSameDigitKey.Sort();
+                int sum = numbersWithSameDigitKey[numbersWithSameDigitKey.Count - 1] + numbersWithSameDigitKey[numbersWithSameDigitKey.Count - 2];
+                maxSum = Math.Max(maxSum, sum);
+            }
+        }
+
+        return maxSum;
+    }
+
+    // Helper function to calculate the digit key of a number.
+    private int CalculateDigitKey(int num)
+    {
+        int firstDigit = num;
+        int lastDigit = num % 10;
+
+        while (firstDigit >= 10)
+        {
+            firstDigit /= 10;
+        }
+
+        return firstDigit * 10 + lastDigit;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Solution solution = new Solution();
+
+        int[] exampleArray = { 100, 101, 300, 101 };
+        int result = solution.Solution(exampleArray);
+        Console.WriteLine("The maximum sum of two numbers with the same digit key is: " + result); // Output: 140
+    }
+}
+using System;
+// you can also use other imports, for example:
+using System.Collections.Generic;
+
+// you can write to stdout for debugging purposes, e.g.
+// Console.WriteLine("this is a debug message");
+
+class Solution 
+{
+    public string solution(string[] A, string[] B, string P) 
+    {
+        // Implement your solution here
+        Dictionary<string, int> dict = new Dictionary<string, int>();
+        int minlength=999999999;
+        string bit="";
+        int check=0;
+        for (int i=0;i<B.Length;i++)
+        {
+            if(B[i].Contains(P))
+            {
+                dict.Add(A[i], 1);
+                check=1;
+            }
+        }
+        foreach (KeyValuePair<string, int> itr in dict)
+        {
+            if(itr.Key.Length<minlength)
+            {
+                bit=itr.Key;
+                minlength=itr.Key.Length;
+            }
+        }
+        if(check==0)
+        {
+            return "NO CONTACT";
+        }
+        return bit;
+    }
+}
+
